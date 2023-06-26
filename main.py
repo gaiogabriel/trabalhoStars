@@ -48,6 +48,7 @@ def line():
         tela.blit(texto, cordenadaTexto)
 
     pygame.display.flip()
+    
 running = True
 while running:
     tela.blit(fundo,(0,0))
@@ -77,7 +78,23 @@ while running:
                 item = "desconhecido"+str(pos)
                 cordenadas[item]= pos
                 root.destroy()      
-        
+        elif evento.type == pygame.KEYUP and evento.key == pygame.K_F10:
+            try:
+                with open("cordenadas", "wb") as arquivo:
+                    pickle.dump(cordenadas, arquivo)
+            except Exception as erro:
+                mensagem_erro = f"Erro ao salvar as cordenadas: {erro}"
+                pygame.display.set_caption(mensagem_erro)
+
+        elif evento.type == pygame.KEYUP and evento.key == pygame.K_F11:
+            try:
+                with open("cordenadas", "rb") as arquivo:
+                    cordenadas = pickle.load(arquivo)
+            except Exception as erro:
+                mensagem_erro = f"Erro ao carregar as cordenadas: {erro}"
+                pygame.display.set_caption(mensagem_erro)
+        elif evento.type == pygame.KEYUP and evento.key == pygame.K_F12:
+            cordenadas.clear()
 
     pygame.display.update()
     clock.tick(60)
