@@ -9,10 +9,12 @@ preto = (0,0,0)
 clock = pygame.time.Clock()
 tela =  pygame.display.set_mode( (800,600) )
 fundo= pygame.image.load("fundo.jpg")
+tela.blit(fundo,(0,0))
 pygame.mixer.music.load("audio.mp3")
 pygame.mixer.music.play(-1)
 pygame.display.set_caption('Star and Space')
 fonte= pygame.font.Font(None, 20)
+estrela_fonte= pygame.font.Font(None, 23)
 texto1= fonte.render("Pressione F10 para salvar os pontos", True, branco)
 texto2= fonte.render("Pressione F11 para carregar os pontos", True, branco)
 texto3= fonte.render("Pressione F12 para deletar os pontos", True, branco)
@@ -21,6 +23,7 @@ cordenada1 = (10,30)
 cordenada2 = (10,50)
 
 cordenadas = []
+nomeEstrelas= []
 root= Tk()
 
 def line():
@@ -48,13 +51,13 @@ def line():
         tela.blit(texto, cordenadaTexto)
 
     pygame.display.flip()
-    
 running = True
 while running:
-    tela.blit(fundo,(0,0))
+   
     tela.blit(texto1, cordenada)
     tela.blit(texto2, cordenada1)
-    tela.blit(texto3, cordenada2)  
+    tela.blit(texto3, cordenada2)
+    line()
 
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
@@ -67,17 +70,22 @@ while running:
                 pygame.draw.circle(tela, branco,(x,y), 5)
                 xy = x,y
                 cordenadas.append(xy)
-                line()
                 pygame.display.update() 
         elif evento.type == pygame.MOUSEBUTTONUP:
-            root.withdraw()
-            pos= pygame.mouse.get_pos()
-            item= simpledialog.askstring("Space", "Nome da Estrela:")
-            print(item)
-            if item == None:
-                item = "desconhecido"+str(pos)
-                cordenadas[item]= pos
-                root.destroy()      
+            if evento.button == 1:
+                root.withdraw()
+                pos= pygame.mouse.get_pos()
+                item= simpledialog.askstring("Space", "Nome da Estrela:")
+                print(item)
+                if item == None:
+                    item1 = "desconhecido"+str(pos)
+                    if item not in nomeEstrelas:
+                        nomeEstrelas[item]= {}
+                    nomeEstrelas[item][item1]= pos
+                    root.destroy()
+                if item is not None:
+                    texto_estrela= estrela_fonte.render(item,True, branco)
+                    tela.blit(texto_estrela, pos)
         elif evento.type == pygame.KEYUP and evento.key == pygame.K_F10:
             try:
                 with open("cordenadas", "wb") as arquivo:
