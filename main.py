@@ -1,6 +1,7 @@
 from tkinter import Tk, simpledialog
 import pygame
 import pickle
+import os
 
 pygame.init()
 branco = (255,255,255)
@@ -70,6 +71,7 @@ while running:
                 pygame.draw.circle(tela, branco,(x,y), 5)
                 xy = x,y
                 cordenadas.append(xy)
+
                 pygame.display.update() 
         elif evento.type == pygame.MOUSEBUTTONUP:
             if evento.button == 1:
@@ -81,10 +83,10 @@ while running:
                     item1 = "desconhecido"+str(pos)
                     if item not in nomeEstrelas:
                         nomeEstrelas[item]= {}
-                    nomeEstrelas[item][item1]= pos
+                    nomeEstrelas[item1]= pos
                     root.destroy()
-                if item is not None:
-                    texto_estrela= estrela_fonte.render(item,True, branco)
+                elif item is not None:
+                    texto_estrela= estrela_fonte.render(item, True, branco)
                     tela.blit(texto_estrela, pos)
         elif evento.type == pygame.KEYUP and evento.key == pygame.K_F10:
             try:
@@ -102,7 +104,12 @@ while running:
                 mensagem_erro = f"Erro ao carregar as cordenadas: {erro}"
                 pygame.display.set_caption(mensagem_erro)
         elif evento.type == pygame.KEYUP and evento.key == pygame.K_F12:
-            cordenadas.clear()
+            try:
+                with open("cordenadas", "rb") as arquivo:
+                    if os.path.exists(arquivo):
+                        os.remove(arquivo)
+            except:
+                pass
 
     pygame.display.update()
     clock.tick(60)
