@@ -13,7 +13,7 @@ fundo= pygame.image.load("fundo.jpg")
 tela.blit(fundo,(0,0))
 pygame.mixer.music.load("audio.mp3")
 pygame.mixer.music.play(-1)
-pygame.display.set_caption('Star and Space')
+pygame.display.set_caption('Space Marker')
 fonte= pygame.font.Font(None, 20)
 estrela_fonte= pygame.font.Font(None, 23)
 texto1= fonte.render("Pressione F10 para salvar os pontos", True, branco)
@@ -82,8 +82,8 @@ while running:
                 if item == None:
                     item1 = "desconhecido"+str(pos)
                     if item not in nomeEstrelas:
-                        nomeEstrelas[item]= {}
-                    nomeEstrelas[item1]= pos
+                        nomeEstrelas[item]= ()
+                        nomeEstrelas[item1]= pos
                     root.destroy()
                 elif item is not None:
                     texto_estrela= estrela_fonte.render(item, True, branco)
@@ -92,6 +92,9 @@ while running:
             try:
                 with open("cordenadas", "wb") as arquivo:
                     pickle.dump(cordenadas, arquivo)
+                with open("nomeEstrelas", "wb") as estrela:
+                    pickle.dump(nomeEstrelas, estrela)
+
             except Exception as erro:
                 mensagem_erro = f"Erro ao salvar as cordenadas: {erro}"
                 pygame.display.set_caption(mensagem_erro)
@@ -100,16 +103,27 @@ while running:
             try:
                 with open("cordenadas", "rb") as arquivo:
                     cordenadas = pickle.load(arquivo)
+                    for i in range( len( cordenadas) - 1):
+                        pygame.draw.circle(tela, branco, cordenadas[i + 1], 5)            
+                with open("nomeEstrela", "rb") as estrela:
+                    nomeEstrelas = pickle.load(estrela)
+                    for j in range( len( nomeEstrelas) - 1):
+                        tela.blit(nomeEstrelas[j] == cordenadas[i])
             except Exception as erro:
                 mensagem_erro = f"Erro ao carregar as cordenadas: {erro}"
                 pygame.display.set_caption(mensagem_erro)
+
         elif evento.type == pygame.KEYUP and evento.key == pygame.K_F12:
             try:
-                with open("cordenadas", "rb") as arquivo:
+                with open("cordenadas", "wb") as arquivo:
                     if os.path.exists(arquivo):
-                        os.remove(arquivo)
+                        arquivo.close()
+                with open("nomeEstrelas", "wb") as estrela:
+                    if os.path.exists(estrela):
+                        estrela.close()
             except:
                 pass
+
 
     pygame.display.update()
     clock.tick(60)

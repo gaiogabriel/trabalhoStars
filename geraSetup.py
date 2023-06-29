@@ -3,15 +3,14 @@ executables= [
     cx_Freeze.Executable(script= "main.py", icon= "space.ico")
 ]
 cx_Freeze.setup(
-    Name= "SpaceMarker",
+    name= "Space Marker",
     options= {
-        "build.exe":{
+        "build_exe":{
             "packages": ["pygame"],
-            "include_files":[
-                "audio.mp3",
-                "fundo.jpg"
+            "include_files":["fundo.jpg",
+                             "audio.mp3"
                 
-            ]
+                            ]
         }
     } , executables= executables
 )
